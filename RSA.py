@@ -1,3 +1,11 @@
+def sign(message, private_key):
+    """用私钥对明文数字直接签名。"""
+    return pow(message, private_key[0], private_key[1])
+
+def verify(message, signature, public_key):
+    """用公钥验证签名。返回True/False。"""
+    v = pow(signature, public_key[0], public_key[1])
+    return message % public_key[1] == v
 def gcd(a, b):
     """Calculate the Greatest Common Divisor using Euclidean algorithm."""
     while b != 0:
@@ -60,6 +68,7 @@ def decrypt(ciphertext, private_key):
     d, n = private_key
     return pow(ciphertext, d, n)
 
+
 def main():
     try:
         print("请输入两个素数 p, q（用空格分隔）:")
@@ -86,6 +95,17 @@ def main():
         print(f"\n密文为: {after}")
         real = decrypt(after, private_key)
         print(f"解密后明文为: {real}")
+
+        # 数字签名演示
+        print("\n--- 数字签名演示 ---")
+        print(f"对明文 {before} 进行签名...")
+        signature = sign(before, private_key)
+        print(f"签名值: {signature}")
+        print("验证签名...")
+        if verify(before, signature, public_key):
+            print("签名验证通过！")
+        else:
+            print("签名验证失败！")
     except Exception as ex:
         print(f"发生错误: {ex}")
 
